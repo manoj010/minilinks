@@ -1,4 +1,5 @@
 import { UserPlus } from 'lucide-react';
+import axios from 'axios';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -26,8 +27,12 @@ export function Register() {
       const response = await registerUser(payload);
       setToken(response.access_token);
       navigate('/dashboard');
-    } catch {
-      setError('That email or username is already in use.');
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data?.detail ?? 'That email or username is already in use.');
+        return;
+      }
+      setError('Could not create account. Please try again.');
     }
   }
 
@@ -66,6 +71,7 @@ export function Register() {
           registration={register('password', {
             required: 'Password is required',
             minLength: { value: 8, message: 'Use at least 8 characters' },
+            maxLength: { value: 72, message: 'Use 72 characters or fewer' },
           })}
           error={errors.password}
         />

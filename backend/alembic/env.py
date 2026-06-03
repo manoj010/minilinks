@@ -8,7 +8,10 @@ from app.database import Base, normalize_database_url
 from app.models import Link, User  # noqa: F401
 
 config = context.config
-config.set_main_option("sqlalchemy.url", normalize_database_url(settings.database_url))
+config.set_main_option(
+    "sqlalchemy.url",
+    normalize_database_url(settings.database_url).replace("%", "%%"),
+)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

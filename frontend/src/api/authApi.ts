@@ -1,5 +1,5 @@
 import { api } from './axios';
-import type { AuthResponse, LoginInput, RegisterInput } from '../types/auth';
+import type { AuthResponse, LoginInput, OAuthProvider, RegisterInput } from '../types/auth';
 import type { UserProfile } from '../types/profile';
 
 export async function login(input: LoginInput) {
@@ -15,4 +15,9 @@ export async function register(input: Omit<RegisterInput, 'confirmPassword'>) {
 export async function getMe() {
   const { data } = await api.get<UserProfile>('/auth/me');
   return data;
+}
+
+export function getOAuthStartUrl(provider: OAuthProvider) {
+  const baseURL = api.defaults.baseURL ?? '/api';
+  return `${baseURL}/auth/oauth/${provider}/start`;
 }

@@ -16,3 +16,5 @@ export type RegisterInput = LoginInput & {
   username: string;
   confirmPassword: string;
 };
+
+export type OAuthProvider = 'google' | 'github';
